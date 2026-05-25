@@ -7,36 +7,112 @@ if (!token) {
 
 const API_URL = "http://localhost:3000/products";
 
-const productForm = document.getElementById("productForm");
-const productsList = document.getElementById("productsList");
-const submitButton = document.getElementById("submitButton");
+const DASHBOARD_URL =
+  "http://localhost:3000/dashboard";
 
-const productIdInput = document.getElementById("productId");
-const nameInput = document.getElementById("name");
-const descriptionInput = document.getElementById("description");
-const priceInput = document.getElementById("price");
-const categoryInput = document.getElementById("category");
-const iconInput = document.getElementById("icon");
-const stockInput = document.getElementById("stock");
-const imageInput = document.getElementById("image");
+const productForm =
+  document.getElementById("productForm");
+
+const productsList =
+  document.getElementById("productsList");
+
+const submitButton =
+  document.getElementById("submitButton");
+
+const productIdInput =
+  document.getElementById("productId");
+
+const nameInput =
+  document.getElementById("name");
+
+const descriptionInput =
+  document.getElementById("description");
+
+const priceInput =
+  document.getElementById("price");
+
+const categoryInput =
+  document.getElementById("category");
+
+const iconInput =
+  document.getElementById("icon");
+
+const stockInput =
+  document.getElementById("stock");
+
+const imageInput =
+  document.getElementById("image");
+
+async function loadDashboard() {
+
+  try {
+
+    const response = await fetch(
+      DASHBOARD_URL,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${token}`
+        }
+      }
+    );
+
+    const data =
+      await response.json();
+
+    document.getElementById(
+      "totalOrders"
+    ).textContent =
+      data.totalOrders;
+
+    document.getElementById(
+      "totalRevenue"
+    ).textContent =
+      `R$ ${Number(
+        data.totalRevenue
+      ).toFixed(2)}`;
+
+    document.getElementById(
+      "totalProducts"
+    ).textContent =
+      data.totalProducts;
+
+    document.getElementById(
+      "lowStockProducts"
+    ).textContent =
+      data.lowStockProducts;
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+}
 
 async function loadProducts() {
 
-  const response = await fetch(API_URL);
+  const response =
+    await fetch(API_URL);
 
-  const products = await response.json();
+  const products =
+    await response.json();
 
   productsList.innerHTML = "";
 
   products.forEach(product => {
 
-    const card = document.createElement("article");
+    const card =
+      document.createElement("article");
 
-    card.classList.add("product-card");
+    card.classList.add(
+      "product-card"
+    );
 
-    const imageUrl = product.image
-      ? `http://localhost:3000/uploads/${product.image}`
-      : "";
+    const imageUrl =
+      product.image
+        ? `http://localhost:3000/uploads/${product.image}`
+        : "";
 
     card.innerHTML = `
       <div>
@@ -59,7 +135,8 @@ async function loadProducts() {
         }
 
         <h3>
-          ${product.icon} ${product.name}
+          ${product.icon}
+          ${product.name}
         </h3>
 
         <p>
@@ -68,7 +145,9 @@ async function loadProducts() {
 
         <p>
           Preço:
-          R$ ${Number(product.price).toFixed(2)}
+          R$ ${Number(
+            product.price
+          ).toFixed(2)}
         </p>
 
         <p>
@@ -114,7 +193,8 @@ productForm.addEventListener(
 
     event.preventDefault();
 
-    const formData = new FormData();
+    const formData =
+      new FormData();
 
     formData.append(
       "name",
@@ -212,6 +292,8 @@ productForm.addEventListener(
 
     loadProducts();
 
+    loadDashboard();
+
   }
 );
 
@@ -250,9 +332,10 @@ function editProduct(product) {
 
 async function deleteProduct(id) {
 
-  const confirmDelete = confirm(
-    "Tem certeza que deseja deletar este produto?"
-  );
+  const confirmDelete =
+    confirm(
+      "Tem certeza que deseja deletar este produto?"
+    );
 
   if (!confirmDelete) return;
 
@@ -274,6 +357,25 @@ async function deleteProduct(id) {
 
   loadProducts();
 
+  loadDashboard();
+
 }
+
+function logout() {
+
+  localStorage.removeItem(
+    "adminToken"
+  );
+
+  localStorage.removeItem(
+    "adminName"
+  );
+
+  window.location.href =
+    "login.html";
+
+}
+
+loadDashboard();
 
 loadProducts();

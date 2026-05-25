@@ -1,103 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  >
+  />
 
   <title>Admin - Copa Stickers</title>
 
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css" />
 </head>
 
 <body>
 
-  <main class="container">
+  <main class="admin-container">
 
-    <h1>Painel Admin</h1>
-
-    <p>
-      Gerencie os produtos da loja.
-    </p>
-
-    <form
-      id="productForm"
-      class="form"
-      enctype="multipart/form-data"
-    >
-
-      <input
-        type="hidden"
-        id="productId"
-      >
-
-      <input
-        type="text"
-        id="name"
-        placeholder="Nome do produto"
-        required
-      >
-
-      <input
-        type="text"
-        id="description"
-        placeholder="Descrição"
-        required
-      >
-
-      <input
-        type="number"
-        id="price"
-        placeholder="Preço"
-        step="0.01"
-        required
-      >
-
-      <input
-        type="text"
-        id="category"
-        placeholder="Categoria"
-        required
-      >
-
-      <input
-        type="text"
-        id="icon"
-        placeholder="Emoji/ícone"
-        required
-      >
-
-      <input
-        type="number"
-        id="stock"
-        placeholder="Estoque"
-        required
-      >
-
-      <input
-        type="file"
-        id="image"
-        accept="image/*"
-      >
+    <header class="admin-header">
+      <div>
+        <h1>Painel Admin</h1>
+        <p>
+          Gerencie produtos da loja.
+        </p>
+      </div>
 
       <button
-        type="submit"
-        id="submitButton"
+        class="logout-btn"
+        onclick="logout()"
       >
-        Cadastrar produto
+        Sair
       </button>
+    </header>
 
-    </form>
+    <!-- DASHBOARD -->
 
-    <section class="products">
+    <section class="dashboard">
+
+      <div class="dashboard-card">
+        <h3>Total Pedidos</h3>
+        <span id="totalOrders">0</span>
+      </div>
+
+      <div class="dashboard-card">
+        <h3>Faturamento</h3>
+        <span id="totalRevenue">
+          R$ 0
+        </span>
+      </div>
+
+      <div class="dashboard-card">
+        <h3>Total Produtos</h3>
+        <span id="totalProducts">0</span>
+      </div>
+
+      <div class="dashboard-card">
+        <h3>Estoque Baixo</h3>
+        <span id="lowStockProducts">0</span>
+      </div>
+
+    </section>
+
+    <!-- FORM -->
+
+    <section class="form-section">
+
+      <h2>
+        Cadastrar Produto
+      </h2>
+
+      <form
+        id="productForm"
+        class="product-form"
+      >
+
+        <input
+          type="hidden"
+          id="productId"
+        />
+
+        <input
+          type="text"
+          id="name"
+          placeholder="Nome do produto"
+          required
+        />
+
+        <textarea
+          id="description"
+          placeholder="Descrição"
+          required
+        ></textarea>
+
+        <input
+          type="number"
+          id="price"
+          placeholder="Preço"
+          step="0.01"
+          required
+        />
+
+        <input
+          type="text"
+          id="category"
+          placeholder="Categoria"
+          required
+        />
+
+        <input
+          type="text"
+          id="icon"
+          placeholder="Emoji"
+          required
+        />
+
+        <input
+          type="number"
+          id="stock"
+          placeholder="Estoque"
+          required
+        />
+
+        <input
+          type="file"
+          id="image"
+          accept="image/*"
+        />
+
+        <button
+          type="submit"
+          id="submitButton"
+        >
+          Cadastrar produto
+        </button>
+
+      </form>
+
+    </section>
+
+    <!-- PRODUTOS -->
+
+    <section class="products-section">
 
       <h2>
         Produtos cadastrados
       </h2>
 
-      <div id="productsList"></div>
+      <div
+        id="productsList"
+        class="products-grid"
+      ></div>
 
     </section>
 
