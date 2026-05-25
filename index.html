@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Copa Stickers 2026</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header class="header">
+    <nav class="navbar">
+      <a href="#" class="logo">
+        <span>⚽</span>
+        Copa Stickers
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#home">Início</a></li>
+        <li><a href="#produtos">Produtos</a></li>
+        <li><a href="#beneficios">Benefícios</a></li>
+      </ul>
+
+      <button class="cart-button" id="openCart">
+        Carrinho <span id="cartCount">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <span class="badge">Álbum Copa do Mundo 2026</span>
+
+        <h1>Complete sua coleção com figurinhas oficiais e raras</h1>
+
+        <p>
+          Compre pacotes, seleções especiais e figurinhas raras da Copa de 2026
+          com entrega rápida, segurança e qualidade premium.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#produtos" class="btn primary">Ver produtos</a>
+          <a href="#beneficios" class="btn secondary">Saiba mais</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="sticker-preview">
+          <span>Brasil</span>
+          <h2>2026</h2>
+          <p>World Cup Edition</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="products-section" id="produtos">
+      <div class="section-header">
+        <span>Loja</span>
+        <h2>Produtos em destaque</h2>
+      </div>
+
+      <div class="filters">
+        <button class="filter active" data-filter="all">Todos</button>
+        <button class="filter" data-filter="pacotes">Pacotes</button>
+        <button class="filter" data-filter="raras">Raras</button>
+        <button class="filter" data-filter="selecoes">Seleções</button>
+      </div>
+
+      <div class="products-grid" id="productsGrid"></div>
+    </section>
+
+    <section class="benefits" id="beneficios">
+      <article>
+        <h3>Entrega rápida</h3>
+        <p>Envio seguro para todo o Brasil com rastreamento.</p>
+      </article>
+
+      <article>
+        <h3>Compra segura</h3>
+        <p>Pagamento protegido e experiência confiável.</p>
+      </article>
+
+      <article>
+        <h3>Figurinhas selecionadas</h3>
+        <p>Produtos organizados para colecionadores exigentes.</p>
+      </article>
+    </section>
+  </main>
+
+  <aside class="cart" id="cart">
+    <div class="cart-header">
+      <h2>Meu carrinho</h2>
+      <button id="closeCart">×</button>
+    </div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="cart-footer">
+      <strong>Total: R$ <span id="cartTotal">0,00</span></strong>
+      <button class="checkout-btn">Finalizar compra</button>
+    </div>
+  </aside>
+
+  <div class="overlay" id="overlay"></div>
+
+  <script src="index.js"></script>
+</body>
+</html>

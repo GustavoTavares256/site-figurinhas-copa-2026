@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Admin - Copa Stickers</title>
+
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+  <main class="container">
+
+    <h1>Painel Admin</h1>
+
+    <p>
+      Gerencie os produtos da loja.
+    </p>
+
+    <form
+      id="productForm"
+      class="form"
+      enctype="multipart/form-data"
+    >
+
+      <input
+        type="hidden"
+        id="productId"
+      >
+
+      <input
+        type="text"
+        id="name"
+        placeholder="Nome do produto"
+        required
+      >
+
+      <input
+        type="text"
+        id="description"
+        placeholder="Descrição"
+        required
+      >
+
+      <input
+        type="number"
+        id="price"
+        placeholder="Preço"
+        step="0.01"
+        required
+      >
+
+      <input
+        type="text"
+        id="category"
+        placeholder="Categoria"
+        required
+      >
+
+      <input
+        type="text"
+        id="icon"
+        placeholder="Emoji/ícone"
+        required
+      >
+
+      <input
+        type="number"
+        id="stock"
+        placeholder="Estoque"
+        required
+      >
+
+      <input
+        type="file"
+        id="image"
+        accept="image/*"
+      >
+
+      <button
+        type="submit"
+        id="submitButton"
+      >
+        Cadastrar produto
+      </button>
+
+    </form>
+
+    <section class="products">
+
+      <h2>
+        Produtos cadastrados
+      </h2>
+
+      <div id="productsList"></div>
+
+    </section>
+
+  </main>
+
+  <script src="admin.js"></script>
+
+</body>
+</html>
