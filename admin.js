@@ -1,3 +1,6 @@
+const ORDERS_URL = "http://localhost:3000/admin/orders";
+const ordersList = document.getElementById("ordersList");
+
 const token = localStorage.getItem("adminToken");
 
 if (!token) {
@@ -375,6 +378,41 @@ function logout() {
     "login.html";
 
 }
+
+async function loadOrders() {
+  const response = await fetch(ORDERS_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  const orders = await response.json();
+
+  ordersList.innerHTML = "";
+
+  orders.forEach(order => {
+    const card = document.createElement("article");
+    card.classList.add("order-card");
+
+    card.innerHTML = `
+      <h3>Pedido #${order.id}</h3>
+      <p>Status: ${order.status}</p>
+      <p>Total: R$ ${Number(order.total).toFixed(2)}</p>
+
+      <ul>
+        ${order.items.map(item => `
+          <li>
+            ${item.quantity}x ${item.product_name} - R$ ${Number(item.price).toFixed(2)}
+          </li>
+        `).join("")}
+      </ul>
+    `;
+
+    ordersList.appendChild(card);
+  });
+}
+
+loadOrders();
 
 loadDashboard();
 

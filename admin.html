@@ -1,160 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Admin - Copa Stickers</title>
+    <title>Admin - Copa Stickers</title>
 
-  <link rel="stylesheet" href="admin.css" />
-</head>
+    <link rel="stylesheet" href="admin.css" />
+  </head>
 
-<body>
+  <body>
+    <main class="admin-container">
+      <header class="admin-header">
+        <div>
+          <h1>Painel Admin</h1>
+          <p>Gerencie produtos da loja.</p>
+        </div>
 
-  <main class="admin-container">
+        <button class="logout-btn" onclick="logout()">Sair</button>
+      </header>
 
-    <header class="admin-header">
-      <div>
-        <h1>Painel Admin</h1>
-        <p>
-          Gerencie produtos da loja.
-        </p>
-      </div>
+      <!-- DASHBOARD -->
 
-      <button
-        class="logout-btn"
-        onclick="logout()"
-      >
-        Sair
-      </button>
-    </header>
+      <section class="dashboard">
+        <div class="dashboard-card">
+          <h3>Total Pedidos</h3>
+          <span id="totalOrders">0</span>
+        </div>
 
-    <!-- DASHBOARD -->
+        <div class="dashboard-card">
+          <h3>Faturamento</h3>
+          <span id="totalRevenue"> R$ 0 </span>
+        </div>
 
-    <section class="dashboard">
+        <div class="dashboard-card">
+          <h3>Total Produtos</h3>
+          <span id="totalProducts">0</span>
+        </div>
 
-      <div class="dashboard-card">
-        <h3>Total Pedidos</h3>
-        <span id="totalOrders">0</span>
-      </div>
+        <div class="dashboard-card">
+          <h3>Estoque Baixo</h3>
+          <span id="lowStockProducts">0</span>
+        </div>
+      </section>
 
-      <div class="dashboard-card">
-        <h3>Faturamento</h3>
-        <span id="totalRevenue">
-          R$ 0
-        </span>
-      </div>
+      <!-- FORM -->
 
-      <div class="dashboard-card">
-        <h3>Total Produtos</h3>
-        <span id="totalProducts">0</span>
-      </div>
+      <section class="form-section">
+        <h2>Cadastrar Produto</h2>
 
-      <div class="dashboard-card">
-        <h3>Estoque Baixo</h3>
-        <span id="lowStockProducts">0</span>
-      </div>
+        <form id="productForm" class="product-form">
+          <input type="hidden" id="productId" />
 
-    </section>
+          <input type="text" id="name" placeholder="Nome do produto" required />
 
-    <!-- FORM -->
+          <textarea
+            id="description"
+            placeholder="Descrição"
+            required
+          ></textarea>
 
-    <section class="form-section">
+          <input
+            type="number"
+            id="price"
+            placeholder="Preço"
+            step="0.01"
+            required
+          />
 
-      <h2>
-        Cadastrar Produto
-      </h2>
+          <input type="text" id="category" placeholder="Categoria" required />
 
-      <form
-        id="productForm"
-        class="product-form"
-      >
+          <input type="text" id="icon" placeholder="Emoji" required />
 
-        <input
-          type="hidden"
-          id="productId"
-        />
+          <input type="number" id="stock" placeholder="Estoque" required />
 
-        <input
-          type="text"
-          id="name"
-          placeholder="Nome do produto"
-          required
-        />
+          <input type="file" id="image" accept="image/*" />
 
-        <textarea
-          id="description"
-          placeholder="Descrição"
-          required
-        ></textarea>
+          <button type="submit" id="submitButton">Cadastrar produto</button>
+        </form>
+      </section>
 
-        <input
-          type="number"
-          id="price"
-          placeholder="Preço"
-          step="0.01"
-          required
-        />
+      <!-- PRODUTOS -->
 
-        <input
-          type="text"
-          id="category"
-          placeholder="Categoria"
-          required
-        />
+      <section class="products-section">
+        <h2>Produtos cadastrados</h2>
 
-        <input
-          type="text"
-          id="icon"
-          placeholder="Emoji"
-          required
-        />
+        <div id="productsList" class="products-grid"></div>
+      </section>
+      <section class="orders-section">
+        <h2>Pedidos recebidos</h2>
+        <div id="ordersList" class="orders-list"></div>
+      </section>
+    </main>
 
-        <input
-          type="number"
-          id="stock"
-          placeholder="Estoque"
-          required
-        />
-
-        <input
-          type="file"
-          id="image"
-          accept="image/*"
-        />
-
-        <button
-          type="submit"
-          id="submitButton"
-        >
-          Cadastrar produto
-        </button>
-
-      </form>
-
-    </section>
-
-    <!-- PRODUTOS -->
-
-    <section class="products-section">
-
-      <h2>
-        Produtos cadastrados
-      </h2>
-
-      <div
-        id="productsList"
-        class="products-grid"
-      ></div>
-
-    </section>
-
-  </main>
-
-  <script src="admin.js"></script>
-
-</body>
+    <script src="admin.js"></script>
+  </body>
 </html>
