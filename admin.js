@@ -1,419 +1,485 @@
+const API_URL = "http://localhost:3000/products";
+const DASHBOARD_URL = "http://localhost:3000/dashboard";
 const ORDERS_URL = "http://localhost:3000/admin/orders";
-const ordersList = document.getElementById("ordersList");
 
 const token = localStorage.getItem("adminToken");
 
 if (!token) {
-  alert("Faça login primeiro.");
   window.location.href = "login.html";
 }
 
-const API_URL = "http://localhost:3000/products";
+const productForm = document.getElementById("productForm");
+const productsGrid = document.getElementById("productsGrid");
+const ordersList = document.getElementById("ordersList");
+const logoutBtn = document.getElementById("logoutBtn");
+const submitButton = document.getElementById("submitButton");
+const formTitle = document.getElementById("formTitle");
 
-const DASHBOARD_URL =
-  "http://localhost:3000/dashboard";
+const productsCount = document.getElementById("productsCount");
+const ordersCount = document.getElementById("ordersCount");
+const revenueValue = document.getElementById("revenueValue");
+const lowStockCount = document.getElementById("lowStockCount");
 
-const productForm =
-  document.getElementById("productForm");
+const searchProducts = document.getElementById("searchProducts");
+const statusFilter = document.getElementById("statusFilter");
 
-const productsList =
-  document.getElementById("productsList");
+const imageInput = document.getElementById("image");
+const previewImage = document.getElementById("previewImage");
 
-const submitButton =
-  document.getElementById("submitButton");
+let editingProductId = null;
+let allOrders = [];
+let salesChart = null;
 
-const productIdInput =
-  document.getElementById("productId");
+function showToast(message, success = true) {
+  Toastify({
+    text: message,
+    duration: 3000,
+    gravity: "top",
+    position: "right",
+    style: {
+      background: success ? "#00c853" : "#ff3b3b",
+      borderRadius: "14px",
+      fontWeight: "700"
+    }
+  }).showToast();
+}
 
-const nameInput =
-  document.getElementById("name");
+function formatCurrency(value) {
+  return Number(value || 0).toFixed(2).replace(".", ",");
+}
 
-const descriptionInput =
-  document.getElementById("description");
+function getStatusLabel(status) {
+  const labels = {
+    pending: "Recebido",
+    paid: "Pago",
+    shipped: "Enviado",
+    delivered: "Entregue",
+    cancelled: "Cancelado"
+  };
 
-const priceInput =
-  document.getElementById("price");
+  return labels[status] || status;
+}
 
-const categoryInput =
-  document.getElementById("category");
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("adminToken");
+  localStorage.removeItem("adminName");
+  window.location.href = "login.html";
+});
 
-const iconInput =
-  document.getElementById("icon");
+imageInput.addEventListener("change", event => {
+  const file = event.target.files[0];
 
-const stockInput =
-  document.getElementById("stock");
+  if (!file) return;
 
-const imageInput =
-  document.getElementById("image");
+  previewImage.src = URL.createObjectURL(file);
+  previewImage.style.display = "block";
+});
 
 async function loadDashboard() {
-
   try {
-
-    const response = await fetch(
-      DASHBOARD_URL,
-      {
-        headers: {
-          Authorization:
-            `Bearer ${token}`
-        }
+    const response = await fetch(DASHBOARD_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    );
+    });
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
-    document.getElementById(
-      "totalOrders"
-    ).textContent =
-      data.totalOrders;
+    productsCount.textContent = data.totalProducts || 0;
+    ordersCount.textContent = data.totalOrders || 0;
+    revenueValue.textContent = `R$ ${formatCurrency(data.totalRevenue || 0)}`;
+    lowStockCount.textContent = data.lowStockProducts || 0;
 
-    document.getElementById(
-      "totalRevenue"
-    ).textContent =
-      `R$ ${Number(
-        data.totalRevenue
-      ).toFixed(2)}`;
-
-    document.getElementById(
-      "totalProducts"
-    ).textContent =
-      data.totalProducts;
-
-    document.getElementById(
-      "lowStockProducts"
-    ).textContent =
-      data.lowStockProducts;
-
+    renderChart(data);
   } catch (error) {
+    console.log("Erro dashboard:", error);
+    showToast("Erro ao carregar dashboard.", false);
+  }
+}
 
-    console.log(error);
+function renderChart(data) {
+  const ctx = document.getElementById("salesChart");
 
+  if (!ctx) return;
+
+  if (salesChart) {
+    salesChart.destroy();
   }
 
+  salesChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Pedidos", "Produtos", "Estoque baixo"],
+      datasets: [
+        {
+          label: "Métricas",
+          data: [
+            data.totalOrders || 0,
+            data.totalProducts || 0,
+            data.lowStockProducts || 0
+          ]
+        }
+      ]
+    }
+  });
 }
 
 async function loadProducts() {
+  try {
+    const response = await fetch(API_URL);
+    const products = await response.json();
 
-  const response =
-    await fetch(API_URL);
+    console.log("Produtos recebidos:", products);
 
-  const products =
-    await response.json();
+    productsGrid.innerHTML = "";
 
-  productsList.innerHTML = "";
+    if (!Array.isArray(products) || products.length === 0) {
+      productsGrid.innerHTML = `
+        <p class="empty-orders">Nenhum produto cadastrado.</p>
+      `;
+      return;
+    }
 
-  products.forEach(product => {
+    products.forEach(product => {
+      const card = document.createElement("article");
+      card.classList.add("product-card");
 
-    const card =
-      document.createElement("article");
-
-    card.classList.add(
-      "product-card"
-    );
-
-    const imageUrl =
-      product.image
+      const imageUrl = product.image
         ? `http://localhost:3000/uploads/${product.image}`
         : "";
 
-    card.innerHTML = `
-      <div>
+      card.innerHTML = `
+        <div>
+          ${
+            imageUrl
+              ? `
+                <img
+                  src="${imageUrl}"
+                  alt="${product.name || "Produto"}"
+                  onerror="this.style.display='none'"
+                />
+              `
+              : ""
+          }
 
-        ${
-          imageUrl
-            ? `
-              <img
-                src="${imageUrl}"
-                alt="${product.name}"
-                width="120"
-                style="
-                  border-radius: 12px;
-                  margin-bottom: 12px;
-                  object-fit: cover;
-                "
-              >
-            `
-            : ""
-        }
+          <h3>${product.icon || ""} ${product.name || "Produto sem nome"}</h3>
+          <p>${product.description || "Sem descrição"}</p>
+          <p>Categoria: ${product.category || "Sem categoria"}</p>
+          <p>Estoque: ${product.stock ?? 0}</p>
 
-        <h3>
-          ${product.icon}
-          ${product.name}
-        </h3>
+          <strong>R$ ${formatCurrency(product.price)}</strong>
+        </div>
 
-        <p>
-          ${product.description}
-        </p>
+        <div class="actions">
+          <button
+            class="edit"
+            onclick='editProduct(${JSON.stringify(product)})'
+          >
+            Editar
+          </button>
 
-        <p>
-          Preço:
-          R$ ${Number(
-            product.price
-          ).toFixed(2)}
-        </p>
+          <button
+            class="delete"
+            onclick="deleteProduct(${product.id})"
+          >
+            Excluir
+          </button>
+        </div>
+      `;
 
-        <p>
-          Categoria:
-          ${product.category}
-        </p>
-
-        <p>
-          Estoque:
-          ${product.stock}
-        </p>
-
-      </div>
-
-      <div class="actions">
-
-        <button
-          class="edit"
-          onclick='editProduct(${JSON.stringify(product)})'
-        >
-          Editar
-        </button>
-
-        <button
-          class="delete"
-          onclick="deleteProduct(${product.id})"
-        >
-          Deletar
-        </button>
-
-      </div>
-    `;
-
-    productsList.appendChild(card);
-
-  });
-
+      productsGrid.appendChild(card);
+    });
+  } catch (error) {
+    console.log("Erro ao carregar produtos:", error);
+    showToast("Erro ao carregar produtos.", false);
+  }
 }
 
-productForm.addEventListener(
-  "submit",
-  async event => {
+searchProducts.addEventListener("input", event => {
+  const value = event.target.value.toLowerCase();
 
-    event.preventDefault();
+  document.querySelectorAll(".product-card").forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = text.includes(value) ? "flex" : "none";
+  });
+});
 
-    const formData =
-      new FormData();
+productForm.addEventListener("submit", async event => {
+  event.preventDefault();
 
-    formData.append(
-      "name",
-      nameInput.value
-    );
+  const formData = new FormData();
 
-    formData.append(
-      "description",
-      descriptionInput.value
-    );
+  formData.append("name", document.getElementById("name").value);
+  formData.append("price", document.getElementById("price").value);
+  formData.append("stock", document.getElementById("stock").value);
+  formData.append("category", document.getElementById("category").value);
+  formData.append("icon", document.getElementById("icon").value);
+  formData.append("description", document.getElementById("description").value);
 
-    formData.append(
-      "price",
-      priceInput.value
-    );
+  const image = imageInput.files[0];
 
-    formData.append(
-      "category",
-      categoryInput.value
-    );
+  if (image) {
+    formData.append("image", image);
+  }
 
-    formData.append(
-      "icon",
-      iconInput.value
-    );
+  const url = editingProductId
+    ? `${API_URL}/${editingProductId}`
+    : API_URL;
 
-    formData.append(
-      "stock",
-      stockInput.value
-    );
+  const method = editingProductId ? "PUT" : "POST";
 
-    if (
-      imageInput.files &&
-      imageInput.files[0]
-    ) {
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: formData
+    });
 
-      formData.append(
-        "image",
-        imageInput.files[0]
-      );
+    const data = await response.json();
 
+    if (!response.ok) {
+      showToast(data.message || "Erro ao salvar produto.", false);
+      return;
     }
 
-    const productId =
-      productIdInput.value;
+    showToast(editingProductId ? "Produto atualizado!" : "Produto criado!");
 
-    if (productId) {
-
-      await fetch(
-        `${API_URL}/${productId}`,
-        {
-          method: "PUT",
-
-          headers: {
-            Authorization:
-              `Bearer ${token}`
-          },
-
-          body: formData
-        }
-      );
-
-      alert(
-        "Produto atualizado com sucesso!"
-      );
-
-    } else {
-
-      await fetch(
-        API_URL,
-        {
-          method: "POST",
-
-          headers: {
-            Authorization:
-              `Bearer ${token}`
-          },
-
-          body: formData
-        }
-      );
-
-      alert(
-        "Produto cadastrado com sucesso!"
-      );
-
-    }
-
+    editingProductId = null;
+    submitButton.textContent = "Salvar produto";
+    formTitle.textContent = "Cadastrar produto";
     productForm.reset();
 
-    productIdInput.value = "";
+    previewImage.src = "";
+    previewImage.style.display = "none";
 
-    submitButton.textContent =
-      "Cadastrar produto";
-
-    loadProducts();
-
-    loadDashboard();
-
+    await loadProducts();
+    await loadDashboard();
+  } catch (error) {
+    console.log("Erro ao salvar produto:", error);
+    showToast("Erro ao salvar produto.", false);
   }
-);
+});
 
 function editProduct(product) {
+  editingProductId = product.id;
 
-  productIdInput.value =
-    product.id;
+  document.getElementById("name").value = product.name || "";
+  document.getElementById("price").value = product.price || "";
+  document.getElementById("stock").value = product.stock || "";
+  document.getElementById("category").value = product.category || "";
+  document.getElementById("icon").value = product.icon || "";
+  document.getElementById("description").value = product.description || "";
 
-  nameInput.value =
-    product.name;
+  submitButton.textContent = "Atualizar produto";
+  formTitle.textContent = "Editar produto";
 
-  descriptionInput.value =
-    product.description;
-
-  priceInput.value =
-    product.price;
-
-  categoryInput.value =
-    product.category;
-
-  iconInput.value =
-    product.icon;
-
-  stockInput.value =
-    product.stock;
-
-  submitButton.textContent =
-    "Atualizar produto";
+  if (product.image) {
+    previewImage.src = `http://localhost:3000/uploads/${product.image}`;
+    previewImage.style.display = "block";
+  } else {
+    previewImage.src = "";
+    previewImage.style.display = "none";
+  }
 
   window.scrollTo({
     top: 0,
     behavior: "smooth"
   });
-
 }
 
 async function deleteProduct(id) {
-
-  const confirmDelete =
-    confirm(
-      "Tem certeza que deseja deletar este produto?"
-    );
+  const confirmDelete = confirm("Deseja excluir este produto?");
 
   if (!confirmDelete) return;
 
-  await fetch(
-    `${API_URL}/${id}`,
-    {
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
-
       headers: {
-        Authorization:
-          `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      showToast(data.message || "Erro ao excluir produto.", false);
+      return;
     }
-  );
 
-  alert(
-    "Produto deletado com sucesso!"
-  );
+    showToast("Produto excluído!");
 
-  loadProducts();
-
-  loadDashboard();
-
-}
-
-function logout() {
-
-  localStorage.removeItem(
-    "adminToken"
-  );
-
-  localStorage.removeItem(
-    "adminName"
-  );
-
-  window.location.href =
-    "login.html";
-
+    await loadProducts();
+    await loadDashboard();
+  } catch (error) {
+    console.log("Erro ao excluir produto:", error);
+    showToast("Erro ao excluir produto.", false);
+  }
 }
 
 async function loadOrders() {
-  const response = await fetch(ORDERS_URL, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+  try {
+    const response = await fetch(ORDERS_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
-  const orders = await response.json();
+    allOrders = await response.json();
 
+    renderOrders(allOrders);
+  } catch (error) {
+    console.log("Erro ao carregar pedidos:", error);
+    showToast("Erro ao carregar pedidos.", false);
+  }
+}
+
+function renderOrders(orders) {
   ordersList.innerHTML = "";
+
+  if (!Array.isArray(orders) || orders.length === 0) {
+    ordersList.innerHTML = `
+      <p class="empty-orders">Nenhum pedido encontrado.</p>
+    `;
+    return;
+  }
 
   orders.forEach(order => {
     const card = document.createElement("article");
     card.classList.add("order-card");
 
     card.innerHTML = `
-      <h3>Pedido #${order.id}</h3>
-      <p>Status: ${order.status}</p>
-      <p>Total: R$ ${Number(order.total).toFixed(2)}</p>
+      <div>
+        <h3>Pedido #${order.id}</h3>
 
-      <ul>
-        ${order.items.map(item => `
-          <li>
-            ${item.quantity}x ${item.product_name} - R$ ${Number(item.price).toFixed(2)}
-          </li>
-        `).join("")}
-      </ul>
+        <p>Status: <strong>${getStatusLabel(order.status)}</strong></p>
+        <p>Total: R$ ${formatCurrency(order.total)}</p>
+
+        ${
+          order.customer
+            ? `
+              <p>Cliente: ${order.customer.name || ""}</p>
+              <p>Telefone: ${order.customer.phone || ""}</p>
+              <p>Endereço: ${order.customer.address || ""}</p>
+            `
+            : ""
+        }
+
+        <ul>
+          ${(order.items || []).map(item => `
+            <li>
+              ${item.quantity}x ${item.product_name}
+              - R$ ${formatCurrency(item.price)}
+            </li>
+          `).join("")}
+        </ul>
+      </div>
+
+      <div class="order-actions">
+        <select
+          class="status-select"
+          onchange="updateOrderStatus(${order.id}, this.value)"
+        >
+          <option value="pending" ${order.status === "pending" ? "selected" : ""}>Recebido</option>
+          <option value="paid" ${order.status === "paid" ? "selected" : ""}>Pago</option>
+          <option value="shipped" ${order.status === "shipped" ? "selected" : ""}>Enviado</option>
+          <option value="delivered" ${order.status === "delivered" ? "selected" : ""}>Entregue</option>
+          <option value="cancelled" ${order.status === "cancelled" ? "selected" : ""}>Cancelado</option>
+        </select>
+
+        <button
+          class="delete"
+          onclick="deleteOrder(${order.id})"
+        >
+          Excluir pedido
+        </button>
+      </div>
     `;
 
     ordersList.appendChild(card);
   });
 }
 
-loadOrders();
+statusFilter.addEventListener("change", event => {
+  const status = event.target.value;
+
+  if (status === "all") {
+    renderOrders(allOrders);
+    return;
+  }
+
+  const filteredOrders = allOrders.filter(order => order.status === status);
+  renderOrders(filteredOrders);
+});
+
+async function updateOrderStatus(orderId, status) {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/admin/orders/${orderId}/status`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          status
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      showToast(data.message || "Erro ao atualizar status.", false);
+      return;
+    }
+
+    showToast("Status atualizado!");
+
+    await loadOrders();
+    await loadDashboard();
+  } catch (error) {
+    console.log("Erro ao atualizar status:", error);
+    showToast("Erro ao atualizar status.", false);
+  }
+}
+
+async function deleteOrder(id) {
+  const confirmDelete = confirm("Deseja excluir este pedido?");
+
+  if (!confirmDelete) return;
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/admin/orders/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      showToast(data.message || "Erro ao excluir pedido.", false);
+      return;
+    }
+
+    showToast("Pedido excluído!");
+
+    await loadOrders();
+    await loadDashboard();
+  } catch (error) {
+    console.log("Erro ao excluir pedido:", error);
+    showToast("Erro ao excluir pedido.", false);
+  }
+}
 
 loadDashboard();
-
 loadProducts();
+loadOrders();

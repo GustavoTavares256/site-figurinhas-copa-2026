@@ -2,9 +2,15 @@ const {
   createOrder
 } = require("../services/orderService");
 
+const {
+  sendOrderEmail
+} = require("../services/emailService");
+
 async function checkout(req, res) {
   try {
-    const { items } = req.body;
+    console.log("Checkout recebido:", req.body);
+
+    const { items, customer } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({
@@ -12,18 +18,30 @@ async function checkout(req, res) {
       });
     }
 
-    const order = await createOrder(items);
+    if (!customer || !customer.name || !customer.phone || !customer.address) {
+      return res.status(400).json({
+        message: "Preencha todos os dados."
+      });
+    }
+
+    const order = await createOrder(items, customer);
+
+    try {
+      await sendOrderEmail(customer.email, customer.name);
+    } catch (emailError) {
+      console.log("Erro ao enviar email:", emailError.message);
+    }
 
     return res.status(201).json({
-      message: "Pedido criado com sucesso!",
+      message: "Pedido criado com sucesso.",
       order
     });
 
   } catch (error) {
-    console.log(error);
+    console.log("Erro checkout:", error);
 
     return res.status(500).json({
-      message: "Erro ao criar pedido."
+      message: error.message || "Erro interno do servidor."
     });
   }
 }

@@ -1,98 +1,125 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Admin - Copa Stickers</title>
+  <title>Admin - Copa Stickers</title>
 
-    <link rel="stylesheet" href="admin.css" />
-  </head>
+  <link rel="stylesheet" href="admin.css" />
 
-  <body>
-    <main class="admin-container">
-      <header class="admin-header">
-        <div>
-          <h1>Painel Admin</h1>
-          <p>Gerencie produtos da loja.</p>
-        </div>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-        <button class="logout-btn" onclick="logout()">Sair</button>
-      </header>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 
-      <!-- DASHBOARD -->
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">⚽ Copa Admin</div>
 
-      <section class="dashboard">
-        <div class="dashboard-card">
-          <h3>Total Pedidos</h3>
-          <span id="totalOrders">0</span>
-        </div>
+    <nav>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#products">Produtos</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#orders">Pedidos</a>
+    </nav>
 
-        <div class="dashboard-card">
-          <h3>Faturamento</h3>
-          <span id="totalRevenue"> R$ 0 </span>
-        </div>
+    <button class="logout-btn" id="logoutBtn">Sair</button>
+  </aside>
 
-        <div class="dashboard-card">
-          <h3>Total Produtos</h3>
-          <span id="totalProducts">0</span>
-        </div>
+  <main class="admin-container">
+    <header class="admin-header">
+      <div>
+        <h1>Painel Admin</h1>
+        <p>Gerencie produtos, pedidos, estoque e métricas.</p>
+      </div>
+    </header>
 
-        <div class="dashboard-card">
-          <h3>Estoque Baixo</h3>
-          <span id="lowStockProducts">0</span>
-        </div>
-      </section>
+    <section class="dashboard" id="dashboard">
+      <article class="dashboard-card">
+        <h3>Produtos</h3>
+        <span id="productsCount">0</span>
+      </article>
 
-      <!-- FORM -->
+      <article class="dashboard-card">
+        <h3>Pedidos</h3>
+        <span id="ordersCount">0</span>
+      </article>
 
-      <section class="form-section">
-        <h2>Cadastrar Produto</h2>
+      <article class="dashboard-card">
+        <h3>Receita</h3>
+        <span id="revenueValue">R$ 0,00</span>
+      </article>
 
-        <form id="productForm" class="product-form">
-          <input type="hidden" id="productId" />
+      <article class="dashboard-card">
+        <h3>Estoque baixo</h3>
+        <span id="lowStockCount">0</span>
+      </article>
+    </section>
 
-          <input type="text" id="name" placeholder="Nome do produto" required />
+    <section class="form-section" id="products">
+      <h2 id="formTitle">Cadastrar produto</h2>
 
-          <textarea
-            id="description"
-            placeholder="Descrição"
-            required
-          ></textarea>
+      <form id="productForm" class="product-form">
+        <input type="hidden" id="productId" />
 
-          <input
-            type="number"
-            id="price"
-            placeholder="Preço"
-            step="0.01"
-            required
-          />
+        <input type="text" id="name" placeholder="Nome" required />
+        <input type="number" id="price" placeholder="Preço" step="0.01" required />
+        <input type="number" id="stock" placeholder="Estoque" required />
+        <input type="text" id="category" placeholder="Categoria" required />
+        <input type="text" id="icon" placeholder="Emoji/ícone" />
+        <textarea id="description" placeholder="Descrição"></textarea>
 
-          <input type="text" id="category" placeholder="Categoria" required />
+        <input type="file" id="image" accept="image/*" />
 
-          <input type="text" id="icon" placeholder="Emoji" required />
+        <img id="previewImage" class="preview-image" src="" alt="Preview da imagem" />
 
-          <input type="number" id="stock" placeholder="Estoque" required />
+        <button type="submit" id="submitButton">Salvar produto</button>
+      </form>
+    </section>
 
-          <input type="file" id="image" accept="image/*" />
-
-          <button type="submit" id="submitButton">Cadastrar produto</button>
-        </form>
-      </section>
-
-      <!-- PRODUTOS -->
-
-      <section class="products-section">
+    <section class="products-section">
+      <div class="section-row">
         <h2>Produtos cadastrados</h2>
 
-        <div id="productsList" class="products-grid"></div>
-      </section>
-      <section class="orders-section">
-        <h2>Pedidos recebidos</h2>
-        <div id="ordersList" class="orders-list"></div>
-      </section>
-    </main>
+        <input
+          type="text"
+          id="searchProducts"
+          class="search-input"
+          placeholder="Buscar produto..."
+        />
+      </div>
 
-    <script src="admin.js"></script>
-  </body>
+      <div id="productsGrid" class="products-grid"></div>
+    </section>
+
+    <section class="analytics-section" id="analytics">
+      <h2>Analytics</h2>
+
+      <div class="chart-card">
+        <canvas id="salesChart"></canvas>
+      </div>
+    </section>
+
+    <section class="orders-section" id="orders">
+      <div class="section-row">
+        <h2>Pedidos recebidos</h2>
+
+        <select id="statusFilter" class="status-select">
+          <option value="all">Todos</option>
+          <option value="pending">Recebido</option>
+          <option value="paid">Pago</option>
+          <option value="shipped">Enviado</option>
+          <option value="delivered">Entregue</option>
+          <option value="cancelled">Cancelado</option>
+        </select>
+      </div>
+
+      <div id="ordersList" class="orders-list"></div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
 </html>

@@ -1,114 +1,189 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Copa Stickers 2026</title>
+  <head>
+    <meta charset="UTF-8" />
 
-  <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
+    <title>Copa Stickers 2026</title>
 
-<body>
-  <header class="header">
-    <nav class="navbar">
-      <a href="#" class="logo">
-        <span>⚽</span>
-        Copa Stickers
-      </a>
+    <link rel="stylesheet" href="style.css" />
 
-      <ul class="nav-links">
-        <li><a href="#home">Início</a></li>
-        <li><a href="#produtos">Produtos</a></li>
-        <li><a href="#beneficios">Benefícios</a></li>
-      </ul>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
 
-      <button class="cart-button" id="openCart">
-        Carrinho <span id="cartCount">0</span>
-      </button>
-    </nav>
-  </header>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <main>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- HEADER -->
+
+    <header class="header">
+      <nav class="navbar">
+        <a href="#home" class="logo">
+          <span>⚽</span>
+          Copa Stickers
+        </a>
+
+        <ul class="nav-links">
+          <li>
+            <a href="#home"> Início </a>
+          </li>
+
+          <li>
+            <a href="#produtos"> Produtos </a>
+          </li>
+
+          <li>
+            <a href="#beneficios"> Benefícios </a>
+          </li>
+        </ul>
+
+        <button class="cart-button" id="openCart">
+          Carrinho
+
+          <span id="cartCount"> 0 </span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+
     <section class="hero" id="home">
       <div class="hero-content">
-        <span class="badge">Álbum Copa do Mundo 2026</span>
+        <span class="badge"> Copa do Mundo 2026 </span>
 
-        <h1>Complete sua coleção com figurinhas oficiais e raras</h1>
+        <h1>Complete sua coleção de figurinhas</h1>
 
         <p>
-          Compre pacotes, seleções especiais e figurinhas raras da Copa de 2026
-          com entrega rápida, segurança e qualidade premium.
+          Pacotes exclusivos, figurinhas raras e coleções especiais das seleções
+          da Copa 2026. Compre com segurança, acompanhe seu pedido e evolua sua
+          coleção.
         </p>
 
         <div class="hero-actions">
-          <a href="#produtos" class="btn primary">Ver produtos</a>
-          <a href="#beneficios" class="btn secondary">Saiba mais</a>
+          <a href="#produtos" class="btn primary"> Ver produtos </a>
+
+          <a href="#beneficios" class="btn secondary"> Saiba mais </a>
         </div>
       </div>
 
       <div class="hero-card">
         <div class="sticker-preview">
-          <span>Brasil</span>
+          <span> WORLD CUP </span>
+
           <h2>2026</h2>
-          <p>World Cup Edition</p>
+
+          <p>Collector Edition</p>
         </div>
       </div>
     </section>
 
+    <!-- PRODUTOS -->
+
     <section class="products-section" id="produtos">
       <div class="section-header">
-        <span>Loja</span>
+        <span> Loja </span>
+
         <h2>Produtos em destaque</h2>
       </div>
 
+      <!-- FILTROS -->
+
       <div class="filters">
         <button class="filter active" data-filter="all">Todos</button>
+
         <button class="filter" data-filter="pacotes">Pacotes</button>
+
         <button class="filter" data-filter="raras">Raras</button>
+
         <button class="filter" data-filter="selecoes">Seleções</button>
       </div>
+
+      <!-- GRID -->
 
       <div class="products-grid" id="productsGrid"></div>
     </section>
 
+    <!-- BENEFÍCIOS -->
+
     <section class="benefits" id="beneficios">
       <article>
         <h3>Entrega rápida</h3>
-        <p>Envio seguro para todo o Brasil com rastreamento.</p>
+
+        <p>Envio seguro para todo o Brasil com rastreamento do pedido.</p>
       </article>
 
       <article>
         <h3>Compra segura</h3>
-        <p>Pagamento protegido e experiência confiável.</p>
+
+        <p>Seus dados são tratados com segurança durante todo o processo.</p>
       </article>
 
       <article>
-        <h3>Figurinhas selecionadas</h3>
-        <p>Produtos organizados para colecionadores exigentes.</p>
+        <h3>Estoque atualizado</h3>
+
+        <p>Os produtos são controlados automaticamente após cada compra.</p>
       </article>
     </section>
-  </main>
 
-  <aside class="cart" id="cart">
-    <div class="cart-header">
-      <h2>Meu carrinho</h2>
-      <button id="closeCart">×</button>
-    </div>
+    <!-- CARRINHO -->
 
-    <div class="cart-items" id="cartItems"></div>
+    <aside class="cart" id="cart">
+      <div class="cart-header">
+        <h2>Meu carrinho</h2>
 
-    <div class="cart-footer">
-      <strong>Total: R$ <span id="cartTotal">0,00</span></strong>
-      <button class="checkout-btn">Finalizar compra</button>
-    </div>
-  </aside>
+        <button id="closeCart">×</button>
+      </div>
 
-  <div class="overlay" id="overlay"></div>
+      <!-- ITENS -->
 
-  <script src="index.js"></script>
-</body>
+      <div class="cart-items" id="cartItems"></div>
+
+      <!-- FORMULÁRIO CLIENTE -->
+
+      <div class="customer-form">
+        <h3>Dados para entrega</h3>
+
+        <input type="text" id="customerName" placeholder="Seu nome completo" />
+
+        <input type="email" id="customerEmail" placeholder="Seu e-mail" />
+
+        <input
+          type="text"
+          id="customerPhone"
+          placeholder="Telefone / WhatsApp"
+        />
+
+        <input
+          type="text"
+          id="customerAddress"
+          placeholder="Endereço de entrega"
+        />
+      </div>
+
+      <!-- FOOTER -->
+
+      <div class="cart-footer">
+        <strong>
+          Total: R$
+          <span id="cartTotal"> 0,00 </span>
+        </strong>
+
+        <button class="checkout-btn" onclick="goToCheckout()">
+          Finalizar compra
+        </button>
+      </div>
+    </aside>
+
+    <!-- OVERLAY -->
+
+    <div class="overlay" id="overlay"></div>
+
+    <script src="index.js"></script>
+  </body>
 </html>
