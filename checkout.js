@@ -1,5 +1,4 @@
-const CHECKOUT_URL = "https://site-figurinhas-copa-2026.onrender.com"
-
+const CHECKOUT_URL = "https://site-figurinhas-copa-2026.onrender.com/checkout";
 const checkoutItems = document.getElementById("checkoutItems");
 const checkoutTotal = document.getElementById("checkoutTotal");
 const checkoutForm = document.getElementById("checkoutForm");
@@ -12,7 +11,9 @@ const customerAddress = document.getElementById("customerAddress");
 const cart = JSON.parse(localStorage.getItem("checkoutCart")) || [];
 
 function formatCurrency(value) {
-  return Number(value || 0).toFixed(2).replace(".", ",");
+  return Number(value || 0)
+    .toFixed(2)
+    .replace(".", ",");
 }
 
 function renderCheckout() {
@@ -29,7 +30,7 @@ function renderCheckout() {
 
   let total = 0;
 
-  cart.forEach(item => {
+  cart.forEach((item) => {
     total += Number(item.price || 0) * Number(item.quantity || 1);
 
     checkoutItems.innerHTML += `
@@ -44,7 +45,7 @@ function renderCheckout() {
   checkoutTotal.textContent = formatCurrency(total);
 }
 
-checkoutForm.addEventListener("submit", async event => {
+checkoutForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   console.log("Botão confirmar clicado");
@@ -59,7 +60,7 @@ checkoutForm.addEventListener("submit", async event => {
     name: customerName.value.trim(),
     email: customerEmail.value.trim(),
     phone: customerPhone.value.trim(),
-    address: customerAddress.value.trim()
+    address: customerAddress.value.trim(),
   };
 
   console.log("Cliente:", customer);
@@ -69,12 +70,12 @@ checkoutForm.addEventListener("submit", async event => {
     const response = await fetch(CHECKOUT_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         items: cart,
-        customer
-      })
+        customer,
+      }),
     });
 
     const data = await response.json();
@@ -89,10 +90,11 @@ checkoutForm.addEventListener("submit", async event => {
     localStorage.removeItem("checkoutCart");
 
     window.location.href = "success.html";
-
   } catch (error) {
     console.log("Erro completo:", error);
-    alert("Erro ao conectar com o servidor. Verifique se o backend está rodando.");
+    alert(
+      "Erro ao conectar com o servidor. Verifique se o backend está rodando.",
+    );
   }
 });
 
