@@ -1,51 +1,59 @@
-const {
-  createOrder
-} = require("../services/orderService");
+const connection = require("../database/connection");
 
-const {
-  sendOrderEmail
-} = require("../services/emailService");
+function createOrder(items, customer) {
+  return new Promise((resolve, reject) => {
+    const total = items.reduce((sum, item) => {
+      return sum + Number(item.price) * Number(item.quantity || 1);
+    }, 0);
 
-async function checkout(req, res) {
-  try {
-    console.log("Checkout recebido:", req.body);
+    const orderSql = `
+      INSERT INTO orders
+      (customer_name, customer_email, customer_phone, customer_address, total)
+      VALUES (?, ?, ?, ?, ?)
+    `;
 
-    const { items, customer } = req.body;
+    connection.query(
+      orderSql,
+      [
+        customer.name,
+        customer.email,
+        customer.phone,
+        customer.address,
+        total
+      ],
+      (error, result) => {
+        if (error) return reject(error);
 
-    if (!items || items.length === 0) {
-      return res.status(400).json({
-        message: "Carrinho vazio."
-      });
-    }
+        const orderId = result.insertId;
 
-    if (!customer || !customer.name || !customer.phone || !customer.address) {
-      return res.status(400).json({
-        message: "Preencha todos os dados."
-      });
-    }
+        const itemValues = items.map((item) => [
+          orderId,
+          item.name,
+          item.quantity || 1,
+          item.price
+        ]);
 
-    const order = await createOrder(items, customer);
+        const itemsSql = `
+          INSERT INTO order_items
+          (order_id, product_name, quantity, price)
+          VALUES ?
+        `;
 
-    try {
-      await sendOrderEmail(customer.email, customer.name);
-    } catch (emailError) {
-      console.log("Erro ao enviar email:", emailError.message);
-    }
+        connection.query(itemsSql, [itemValues], (itemsError) => {
+          if (itemsError) return reject(itemsError);
 
-    return res.status(201).json({
-      message: "Pedido criado com sucesso.",
-      order
-    });
-
-  } catch (error) {
-    console.log("Erro checkout:", error);
-
-    return res.status(500).json({
-      message: error.message || "Erro interno do servidor."
-    });
-  }
+          resolve({
+            id: orderId,
+            customer,
+            items,
+            total
+          });
+        });
+      }
+    );
+  });
 }
 
 module.exports = {
-  checkout
+  createOrder
 };

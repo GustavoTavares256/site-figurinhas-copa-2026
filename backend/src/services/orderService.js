@@ -1,80 +1,71 @@
 const connection = require("../database/connection");
 
-function createOrder(items) {
-
+function createOrder(items, customer) {
   return new Promise((resolve, reject) => {
-
     const total = items.reduce((acc, item) => {
-      return acc + item.price * item.quantity;
+      return acc + Number(item.price) * Number(item.quantity || 1);
     }, 0);
 
-    connection.query(
-      "INSERT INTO orders (total, status) VALUES (?, ?)",
-      [total, "pending"],
-      (error, result) => {
+    const orderSql = `
+      INSERT INTO orders
+      (customer_name, customer_email, customer_phone, customer_address, total, status)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
 
-        if (error) {
-          reject(error);
-          return;
-        }
+    connection.query(
+      orderSql,
+      [
+        customer.name,
+        customer.email,
+        customer.phone,
+        customer.address,
+        total,
+        "pending"
+      ],
+      (error, result) => {
+        if (error) return reject(error);
 
         const orderId = result.insertId;
 
-        const orderItems = items.map(item => [
+        const orderItems = items.map((item) => [
           orderId,
           item.name,
-          item.quantity,
-          item.price
+          Number(item.quantity || 1),
+          Number(item.price)
         ]);
 
-        connection.query(
-          "INSERT INTO order_items (order_id, product_name, quantity, price) VALUES ?",
-          [orderItems],
-          async (error) => {
+        const itemsSql = `
+          INSERT INTO order_items
+          (order_id, product_name, quantity, price)
+          VALUES ?
+        `;
 
-            if (error) {
-              reject(error);
-              return;
+        connection.query(itemsSql, [orderItems], async (error) => {
+          if (error) return reject(error);
+
+          try {
+            for (const item of items) {
+              await decreaseStock(item.id, Number(item.quantity || 1));
             }
 
-            try {
-
-              for (const item of items) {
-
-                await decreaseStock(
-                  item.id,
-                  item.quantity
-                );
-
-              }
-
-              resolve({
-                id: orderId,
-                total,
-                status: "pending",
-                items
-              });
-
-            } catch (error) {
-
-              reject(error);
-
-            }
-
+            resolve({
+              id: orderId,
+              customer,
+              total,
+              status: "pending",
+              items
+            });
+          } catch (stockError) {
+            reject(stockError);
           }
-        );
-
+        });
       }
     );
-
   });
-
 }
 
 function decreaseStock(productId, quantity) {
-
   return new Promise((resolve, reject) => {
-
     connection.query(
       `
         UPDATE products
@@ -83,28 +74,16 @@ function decreaseStock(productId, quantity) {
       `,
       [quantity, productId, quantity],
       (error, result) => {
-
-        if (error) {
-          reject(error);
-          return;
-        }
+        if (error) return reject(error);
 
         if (result.affectedRows === 0) {
-
-          reject(
-            new Error("Estoque insuficiente.")
-          );
-
-          return;
+          return reject(new Error("Estoque insuficiente."));
         }
 
         resolve();
-
       }
     );
-
   });
-
 }
 
 module.exports = {
