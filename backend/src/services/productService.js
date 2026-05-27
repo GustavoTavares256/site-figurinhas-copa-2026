@@ -2,17 +2,19 @@ const connection = require("../database/connection");
 
 function getAllProducts() {
   return new Promise((resolve, reject) => {
-    connection.query("SELECT * FROM products", (error, results) => {
-      if (error) return reject(error);
-      resolve(results);
-    });
+    connection.query(
+      "SELECT * FROM products ORDER BY id DESC",
+      (error, results) => {
+        if (error) return reject(error);
+
+        resolve(results);
+      }
+    );
   });
 }
 
 function createProduct(product) {
-
   return new Promise((resolve, reject) => {
-
     const {
       name,
       description,
@@ -24,7 +26,6 @@ function createProduct(product) {
     } = product;
 
     connection.query(
-
       `
         INSERT INTO products
         (
@@ -38,7 +39,6 @@ function createProduct(product) {
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `,
-
       [
         name,
         description,
@@ -48,13 +48,8 @@ function createProduct(product) {
         stock,
         image
       ],
-
       (error, result) => {
-
-        if (error) {
-          reject(error);
-          return;
-        }
+        if (error) return reject(error);
 
         resolve({
           id: result.insertId,
@@ -66,19 +61,13 @@ function createProduct(product) {
           stock,
           image
         });
-
       }
-
     );
-
   });
-
 }
 
 function updateProduct(id, product) {
-
   return new Promise((resolve, reject) => {
-
     const {
       name,
       description,
@@ -89,8 +78,50 @@ function updateProduct(id, product) {
       image
     } = product;
 
-    connection.query(
+    if (image) {
+      connection.query(
+        `
+          UPDATE products
+          SET
+            name = ?,
+            description = ?,
+            price = ?,
+            category = ?,
+            icon = ?,
+            stock = ?,
+            image = ?
+          WHERE id = ?
+        `,
+        [
+          name,
+          description,
+          price,
+          category,
+          icon,
+          stock,
+          image,
+          id
+        ],
+        (error) => {
+          if (error) return reject(error);
 
+          resolve({
+            id,
+            name,
+            description,
+            price,
+            category,
+            icon,
+            stock,
+            image
+          });
+        }
+      );
+
+      return;
+    }
+
+    connection.query(
       `
         UPDATE products
         SET
@@ -99,11 +130,9 @@ function updateProduct(id, product) {
           price = ?,
           category = ?,
           icon = ?,
-          stock = ?,
-          image = ?
+          stock = ?
         WHERE id = ?
       `,
-
       [
         name,
         description,
@@ -111,16 +140,10 @@ function updateProduct(id, product) {
         category,
         icon,
         stock,
-        image,
         id
       ],
-
       (error) => {
-
-        if (error) {
-          reject(error);
-          return;
-        }
+        if (error) return reject(error);
 
         resolve({
           id,
@@ -129,16 +152,11 @@ function updateProduct(id, product) {
           price,
           category,
           icon,
-          stock,
-          image
+          stock
         });
-
       }
-
     );
-
   });
-
 }
 
 function deleteProduct(id) {

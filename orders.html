@@ -4,33 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Meus pedidos - Copa Stickers</title>
+  <title>Meus pedidos</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="orders.css" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
 </head>
 
 <body>
   <main class="orders-page">
-    <section class="orders-container">
-      <div class="orders-header">
-        <h1>Meus pedidos</h1>
-        <p>Digite seu telefone para acompanhar seus pedidos.</p>
+    <section class="orders-card">
+      <span class="orders-tag">Acompanhamento</span>
 
-        <form id="searchOrdersForm" class="orders-search">
-          <input
-            type="text"
-            id="phoneInput"
-            placeholder="Digite seu telefone/WhatsApp"
-            required
-          />
+      <h1>Meus pedidos</h1>
 
-          <button type="submit">
-            Buscar pedidos
-          </button>
-        </form>
-      </div>
+      <p>
+        Digite o mesmo telefone usado na compra para acompanhar seus pedidos.
+      </p>
 
-      <div id="customerOrdersList" class="customer-orders-list"></div>
+      <form id="searchOrdersForm" class="orders-form">
+        <input
+          type="text"
+          id="phoneInput"
+          placeholder="Digite seu telefone / WhatsApp"
+          required
+        />
+
+        <button type="submit">
+          Buscar pedidos
+        </button>
+      </form>
+
+      <div id="customerOrdersList" class="orders-list"></div>
 
       <a href="index.html" class="back-link">
         Voltar para loja
