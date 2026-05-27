@@ -1,92 +1,195 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
   <title>Copa Stickers</title>
 
-  <link rel="stylesheet" href="style.css" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet"
   />
+
 </head>
 
 <body>
-  <div id="overlay" class="overlay"></div>
+
+  <div
+    id="overlay"
+    class="overlay"
+  ></div>
+
+  <!-- HEADER -->
 
   <header class="header">
-    <div class="logo">⚽ Copa Stickers</div>
+
+    <div class="logo">
+      ⚽ Copa Stickers
+    </div>
 
     <nav class="nav">
-      <button class="filter active" data-filter="all">Todos</button>
-      <button class="filter" data-filter="pacotes">Pacotes</button>
-      <button class="filter" data-filter="raras">Raras</button>
-      <button class="filter" data-filter="selecoes">Seleções</button>
+
+      <button
+        class="filter active"
+        data-filter="all"
+        onclick="goToProducts()"
+      >
+        Todos
+      </button>
+
+      <button
+        class="filter"
+        data-filter="pacotes"
+        onclick="goToProducts()"
+      >
+        Pacotes
+      </button>
+
+      <button
+        class="filter"
+        data-filter="raras"
+        onclick="goToProducts()"
+      >
+        Raras
+      </button>
+
+      <button
+        class="filter"
+        data-filter="selecoes"
+        onclick="goToProducts()"
+      >
+        Seleções
+      </button>
+
     </nav>
 
-    <button id="openCart" class="cart-button">
+    <button
+      id="openCart"
+      class="cart-button"
+    >
       🛒
-      <span id="cartCount">0</span>
+      <span id="cartCount">
+        0
+      </span>
     </button>
+
   </header>
 
-  <section class="hero">
-    <div class="hero-content">
-      <span class="hero-tag">Coleção Copa 2026</span>
+  <!-- HERO -->
 
-      <h1>Complete seu álbum da Copa.</h1>
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <span class="hero-tag">
+        Coleção Copa 2026
+      </span>
+
+      <h1>
+        Complete seu álbum da Copa.
+      </h1>
 
       <p>
-        Figurinhas, pacotes especiais, seleções e itens raros para colecionadores.
+        Figurinhas, pacotes especiais,
+        seleções e itens raros
+        para colecionadores.
       </p>
 
       <button
         class="hero-button"
-        onclick="document.getElementById('productsGrid').scrollIntoView({ behavior: 'smooth' })"
+        onclick="goToProducts()"
       >
         Comprar agora
       </button>
+
     </div>
+
   </section>
 
+  <!-- PRODUTOS -->
+
   <main class="products-container">
-    <div id="productsGrid" class="products-grid"></div>
+
+    <div
+      id="productsGrid"
+      class="products-grid"
+    ></div>
+
   </main>
 
-  <aside id="cart" class="cart">
-    <div class="cart-header">
-      <h2>Seu carrinho</h2>
+  <!-- CARRINHO -->
 
-      <button id="closeCart" class="close-cart">
+  <aside
+    id="cart"
+    class="cart"
+  >
+
+    <div class="cart-header">
+
+      <h2>
+        Seu carrinho
+      </h2>
+
+      <button
+        id="closeCart"
+        class="close-cart"
+      >
         ✕
       </button>
+
     </div>
 
-    <div id="cartItems" class="cart-items">
-      <p>Seu carrinho está vazio.</p>
+    <div
+      id="cartItems"
+      class="cart-items"
+    >
+
+      <p>
+        Seu carrinho está vazio.
+      </p>
+
     </div>
 
     <div class="cart-footer">
+
       <div class="cart-total">
-        <span>Total:</span>
+
+        <span>
+          Total:
+        </span>
 
         <strong>
-          R$ <span id="cartTotal">0,00</span>
+          R$
+          <span id="cartTotal">
+            0,00
+          </span>
         </strong>
+
       </div>
 
-      <button class="checkout-button" onclick="goToCheckout()">
+      <button
+        class="checkout-button"
+        onclick="goToCheckout()"
+      >
         Finalizar compra
       </button>
+
     </div>
+
   </aside>
 
   <script src="index.js"></script>
+
 </body>
 </html>
