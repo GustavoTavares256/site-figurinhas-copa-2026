@@ -16,33 +16,53 @@
 
 <body>
   <main class="orders-page">
-    <section class="orders-card">
-      <span class="orders-tag">Acompanhamento</span>
-
-      <h1>Meus pedidos</h1>
-
-      <p>
-        Digite o mesmo telefone usado na compra para acompanhar seus pedidos.
-      </p>
-
-      <form id="searchOrdersForm" class="orders-form">
-        <input
-          type="text"
-          id="phoneInput"
-          placeholder="Digite seu telefone / WhatsApp"
-          required
-        />
-
-        <button type="submit">
-          Buscar pedidos
-        </button>
-      </form>
-
-      <div id="customerOrdersList" class="orders-list"></div>
-
+    <section class="orders-hero">
       <a href="index.html" class="back-link">
-        Voltar para loja
+        ← Voltar para loja
       </a>
+
+      <div class="orders-card">
+        <span class="orders-tag">Acompanhamento</span>
+
+        <h1>Acompanhe seu pedido</h1>
+
+        <p>
+          Digite o mesmo telefone usado no checkout para visualizar o status,
+          os itens comprados e o andamento da sua entrega.
+        </p>
+
+        <form id="searchOrdersForm" class="orders-form">
+          <input
+            type="text"
+            id="phoneInput"
+            placeholder="Digite seu telefone / WhatsApp"
+            required
+          />
+
+          <button type="submit">
+            Buscar pedidos
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <section class="orders-results">
+      <div class="results-header">
+        <div>
+          <span>Histórico</span>
+          <h2>Seus pedidos</h2>
+        </div>
+
+        <p>
+          O status é atualizado pela administração da loja.
+        </p>
+      </div>
+
+      <div id="customerOrdersList" class="orders-list">
+        <p class="empty-orders">
+          Nenhum pedido buscado ainda.
+        </p>
+      </div>
     </section>
   </main>
 

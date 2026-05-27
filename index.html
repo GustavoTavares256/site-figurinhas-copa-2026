@@ -9,11 +9,29 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>Copa Stickers</title>
+  <title>
+    Copa Stickers | Loja Premium
+  </title>
+
+  <meta
+    name="description"
+    content="Loja premium de figurinhas da Copa 2026."
+  />
+
+  <meta
+    name="theme-color"
+    content="#07111f"
+  />
 
   <link
-    rel="stylesheet"
-    href="style.css"
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  />
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
   />
 
   <link
@@ -21,9 +39,23 @@
     rel="stylesheet"
   />
 
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+
 </head>
 
 <body>
+
+  <!-- TOAST -->
+
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+  <!-- OVERLAY -->
 
   <div
     id="overlay"
@@ -34,16 +66,24 @@
 
   <header class="header">
 
-    <div class="logo">
-      ⚽ Copa Stickers
-    </div>
+    <a
+      href="#"
+      class="logo"
+    >
+
+      <span>
+        ⚽
+      </span>
+
+      Copa Stickers
+
+    </a>
 
     <nav class="nav">
 
       <button
         class="filter active"
         data-filter="all"
-        onclick="goToProducts()"
       >
         Todos
       </button>
@@ -51,7 +91,6 @@
       <button
         class="filter"
         data-filter="pacotes"
-        onclick="goToProducts()"
       >
         Pacotes
       </button>
@@ -59,7 +98,6 @@
       <button
         class="filter"
         data-filter="raras"
-        onclick="goToProducts()"
       >
         Raras
       </button>
@@ -67,22 +105,35 @@
       <button
         class="filter"
         data-filter="selecoes"
-        onclick="goToProducts()"
       >
         Seleções
       </button>
 
     </nav>
 
-    <button
-      id="openCart"
-      class="cart-button"
-    >
-      🛒
-      <span id="cartCount">
-        0
-      </span>
-    </button>
+    <div class="header-actions">
+
+      <button
+        id="themeToggle"
+        class="icon-btn"
+      >
+        🌙
+      </button>
+
+      <button
+        id="openCart"
+        class="cart-button"
+      >
+
+        Carrinho
+
+        <span id="cartCount">
+          0
+        </span>
+
+      </button>
+
+    </div>
 
   </header>
 
@@ -93,40 +144,190 @@
     <div class="hero-content">
 
       <span class="hero-tag">
-        Coleção Copa 2026
+        Copa do Mundo 2026
       </span>
 
       <h1>
-        Complete seu álbum da Copa.
+        Complete seu álbum com estilo.
       </h1>
 
       <p>
-        Figurinhas, pacotes especiais,
-        seleções e itens raros
-        para colecionadores.
+        Colecione figurinhas raras,
+        seleções especiais e pacotes exclusivos
+        em uma experiência premium.
       </p>
 
-      <button
-        class="hero-button"
-        onclick="goToProducts()"
-      >
-        Comprar agora
-      </button>
+      <div class="hero-actions">
+
+        <button
+          class="hero-button"
+          onclick="goToProducts()"
+        >
+          Ver produtos
+        </button>
+
+        <button
+          class="hero-outline"
+          onclick="goToFavorites()"
+        >
+          Favoritos
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="hero-card">
+
+      <span>
+        WORLD CUP
+      </span>
+
+      <strong>
+        2026
+      </strong>
+
+      <p>
+        Collector Edition
+      </p>
 
     </div>
 
   </section>
 
-  <!-- PRODUTOS -->
+  <!-- STORE -->
 
-  <main class="products-container">
+  <section
+    class="store-section"
+    id="store"
+  >
+
+    <div class="section-header">
+
+      <div>
+
+        <span>
+          Loja
+        </span>
+
+        <h2>
+          Produtos em destaque
+        </h2>
+
+      </div>
+
+      <div class="store-tools">
+
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="Buscar figurinhas..."
+        />
+
+        <select id="sortSelect">
+
+          <option value="default">
+            Ordenar
+          </option>
+
+          <option value="price-asc">
+            Menor preço
+          </option>
+
+          <option value="price-desc">
+            Maior preço
+          </option>
+
+          <option value="name">
+            Nome
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <!-- GRID -->
 
     <div
       id="productsGrid"
       class="products-grid"
     ></div>
 
-  </main>
+    <!-- PAGINATION -->
+
+    <div class="pagination">
+
+      <button id="prevPage">
+        Anterior
+      </button>
+
+      <span id="pageInfo">
+        Página 1
+      </span>
+
+      <button id="nextPage">
+        Próxima
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- BENEFITS -->
+
+  <section class="benefits">
+
+    <article>
+
+      <strong>
+        🚚
+      </strong>
+
+      <h3>
+        Entrega rápida
+      </h3>
+
+      <p>
+        Envio seguro com acompanhamento completo do pedido.
+      </p>
+
+    </article>
+
+    <article>
+
+      <strong>
+        🔒
+      </strong>
+
+      <h3>
+        Compra segura
+      </h3>
+
+      <p>
+        Plataforma protegida com experiência premium.
+      </p>
+
+    </article>
+
+    <article>
+
+      <strong>
+        ⭐
+      </strong>
+
+      <h3>
+        Itens selecionados
+      </h3>
+
+      <p>
+        Produtos escolhidos para colecionadores exigentes.
+      </p>
+
+    </article>
+
+  </section>
 
   <!-- CARRINHO -->
 
@@ -160,6 +361,24 @@
       </p>
 
     </div>
+
+    <!-- CUPOM -->
+
+    <div class="coupon-box">
+
+      <input
+        type="text"
+        id="couponInput"
+        placeholder="Cupom de desconto"
+      />
+
+      <button id="applyCoupon">
+        Aplicar
+      </button>
+
+    </div>
+
+    <!-- TOTAL -->
 
     <div class="cart-footer">
 
