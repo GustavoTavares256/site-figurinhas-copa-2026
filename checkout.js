@@ -1,4 +1,4 @@
-const CHECKOUT_URL = "http://localhost:3000/checkout";
+const CHECKOUT_URL = "https://site-figurinhas-copa-2026.onrender.com"
 
 const checkoutItems = document.getElementById("checkoutItems");
 const checkoutTotal = document.getElementById("checkoutTotal");

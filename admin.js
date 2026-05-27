@@ -1,7 +1,10 @@
-const API_URL = "http://localhost:3000/products";
-const DASHBOARD_URL = "http://localhost:3000/dashboard";
-const ORDERS_URL = "http://localhost:3000/admin/orders";
+const API_URL = "https://site-figurinhas-copa-2026.onrender.com";
 
+const DASHBOARD_URL =
+  "https://site-figurinhas-copa-2026.onrender.com/dashboard";
+
+const ORDERS_URL =
+  "https://site-figurinhas-copa-2026.onrender.com/admin/orders";
 const token = localStorage.getItem("adminToken");
 
 if (!token) {

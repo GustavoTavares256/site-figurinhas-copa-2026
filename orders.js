@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/orders/customer";
+const API_URL = "https://site-figurinhas-copa-2026.onrender.com";
 
 const searchOrdersForm = document.getElementById("searchOrdersForm");
 const phoneInput = document.getElementById("phoneInput");

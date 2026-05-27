@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/products";
+const API_URL = "https://site-figurinhas-copa-2026.onrender.com";
 
 let products = [];
 let filteredProducts = [];
