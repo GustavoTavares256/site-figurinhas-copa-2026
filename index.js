@@ -1,4 +1,5 @@
-const API_URL = "https://site-figurinhas-copa-2026.onrender.com";
+const API_URL = "https://site-figurinhas-copa-2026.onrender.com/products";
+
 
 let products = [];
 let filteredProducts = [];

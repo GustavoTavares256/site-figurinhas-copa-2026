@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/auth/login";
+const API_URL = "https://site-figurinhas-copa-2026.onrender.com";
 
 const loginForm = document.getElementById("loginForm");
 const emailInput = document.getElementById("email");
