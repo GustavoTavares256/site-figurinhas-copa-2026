@@ -18,14 +18,11 @@ async function createAdmin() {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   connection.query(
-    `
-      INSERT INTO admins (name, email, password)
-      VALUES (?, ?, ?)
-    `,
+    "INSERT INTO admins (name, email, password_hash) VALUES (?, ?, ?)"
     [name, email, hashedPassword],
     (error) => {
       if (error) {
-        console.log("Erro:", error);
+        console.log("Erro ao criar admin:", error);
         process.exit(1);
       }
 
