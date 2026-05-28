@@ -1,0 +1,9 @@
+{
+  "name": "Copa Stickers",
+  "short_name": "Copa Stickers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06111f",
+  "theme_color": "#ffd500",
+  "icons": []
+}

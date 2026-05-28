@@ -1,8 +1,13 @@
 {
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "start:backend": "npm --prefix backend start",
+    "db:migrate": "npm --prefix backend run db:migrate",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build"
+  },
   "dependencies": {
     "mysql2": "^3.22.3"
   }
 }
-
-
 

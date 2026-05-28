@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Login Admin</title>
+
+  <link rel="stylesheet" href="css/login.css" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+  <main class="login-page">
+    <section class="login-card">
+      <div class="login-logo">⚽</div>
+
+      <span class="login-tag">Área administrativa</span>
+
+      <h1>Login Admin</h1>
+
+      <p>Acesse o painel para gerenciar produtos, pedidos e estoque.</p>
+
+      <form id="loginForm" class="login-form">
+        <input type="email" id="email" placeholder="E-mail" required />
+        <input type="password" id="password" placeholder="Senha" required />
+
+        <button type="submit">
+          Entrar no painel
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
