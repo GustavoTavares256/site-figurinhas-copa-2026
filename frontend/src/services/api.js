@@ -3,11 +3,11 @@ import axios from "axios";
 const fallbackApiUrl =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
-    ? "http://localhost:3000/api"
-    : "https://site-figurinhas-copa-2026.onrender.com/api";
+    ? "http://localhost:3000"
+    : "https://site-figurinhas-copa-2026.onrender.com";
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || fallbackApiUrl;
-export const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, "");
+export const API_ORIGIN = API_BASE_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
